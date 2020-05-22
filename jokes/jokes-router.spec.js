@@ -32,44 +32,13 @@ describe('jokes-router', () => {
         })
     })
 
-    // it('returns jokes when authenticated', () => {
-
-    // })
-
-    // it('returns an error when not authenticated', () => {
-
-    // })
-
+    it('rejects request without proper auth token', () => {
+      return supertest(server)
+      .get('/api/jokes')
+      .then(resp => {
+        expect(resp.status).toBe(401)
+      })
+    })
   })
-
-  // describe('POST /login', () => {
-  //   it('returns error when trying to login with invalid data', () => {
-  //     return supertest(server)
-  //       .post('/api/auth/login')
-  //       .send({password: pass})
-  //       .then(response => {
-  //         expect(response.status).toBe(400)
-  //       })
-  //   })
-
-  //   it('returns error when trying to login with incorrect credentials', () => {
-  //     return supertest(server)
-  //       .post('/api/auth/login')
-  //       .send({username: uname, password: 'I am the wrong pass'})
-  //       .then(response => {
-  //         expect(response.status).toBe(401)
-  //       })
-  //   })
-
-  //   it('returns returns successfully if correct credentials are passed', () => {
-  //     return supertest(server)
-  //       .post('/api/auth/login')
-  //       .send({username: uname, password: pass})
-  //       .then(response => {
-  //         expect(response.status).toBe(202)
-  //       })
-  //   })
-
-  // })
 
 })
