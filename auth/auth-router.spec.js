@@ -54,7 +54,7 @@ describe('auth-router', () => {
         .post('/api/auth/login')
         .send({username: uname, password: 'I am the wrong pass'})
         .then(response => {
-          expect(response.status).toBe(400)
+          expect(response.status).toBe(401)
         })
     })
 
@@ -63,7 +63,7 @@ describe('auth-router', () => {
         .post('/api/auth/login')
         .send({username: uname, password: pass})
         .then(response => {
-          expect(response.status).toBe(200)
+          expect(response.status).toBe(202)
         })
     })
 
