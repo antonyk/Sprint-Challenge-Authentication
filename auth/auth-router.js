@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const users = require('../database/user-model')
-// const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const bcryptjs = require('bcryptjs')
+const rounds = 2;
 
 const secret = 'I am a secret!'
-// const rounds = 2;
 const log = console.log
 
 router.post('/register', (req, res) => {
@@ -17,7 +17,7 @@ router.post('/register', (req, res) => {
       // create the jwt and return it
       const token = createToken(result)
 
-      res.status(200).json({data: result, jwt: token})
+      res.status(200).json({message: "Success", jwt: token})
     })
     .catch(err => {
       res.status(500).json({message: "Failed to create user", error: err})
@@ -34,10 +34,11 @@ router.post('/login', (req, res) => {
   if (user && user.username && user.password) {
     // user.password = bcryptjs.hashSync(user.password, rounds)
 
-    users.authUser(user).then(isValid => {
-      if (isValid) {
+    users.authUser(user).then(result => {
+      if (result) {
+        const token = createToken({...user, id: result.id})
 
-        res.status(202).json({data: {username: user.username}})
+        res.status(202).json({message: "Success", jwt: token})
         // set up jwt
       } else {
         res.status(401).json({message: "Invalid credentials! Shall not pass!"})

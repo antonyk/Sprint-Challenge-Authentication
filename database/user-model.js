@@ -2,7 +2,8 @@ module.exports = {
   insert,
   getById,
   getByUsername,
-  validateCredentials
+  validateCredentials,
+  authUser
 }
 
 const db = require('./dbConfig')
@@ -78,10 +79,10 @@ function authUser(user) {
     .select()
     .first()
     .then(result => {
-      if (result) {
-        return bcryptjs.compareSync(user.password, result.password)
+      if (result.id && bcryptjs.compareSync(user.password, result.password)) {
+        return { id: result.id }
       } else {
-        return false;
+        return null;
       }
     })
 }
