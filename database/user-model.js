@@ -6,8 +6,12 @@ module.exports = {
 }
 
 const db = require('./dbConfig')
+const bcryptjs = require('bcryptjs')
+const rounds = 2;
 
 function insert (data) {
+  data.password = bcryptjs.hashSync(data.password, rounds)
+
   return db('users')
     .insert(data, 'id')
     .then(result => {
@@ -46,14 +50,38 @@ function getByUsername(username) {
 }
 
 async function validateCredentials(user) {
-  const found = await db('users')
+  const foundUser = await db('users')
     .columns({
       id:       'id',
       username: 'username',
       password: 'password'
     })
-    .where({"username": user.username, "password": user.password})
+    .where({"username": user.username})
     .select()
 
-  return Boolean(found.length > 0)
+  if (foundUser.length > 0) {
+    return bcryptjs.compareSync(user.password, foundUser.password)
+  }
+  else {
+    return false
+  }
+}
+
+function authUser(user) {
+  return db('users')
+    .columns({
+      id:       'id',
+      username: 'username',
+      password: 'password'
+    })
+    .where({"username": user.username})
+    .select()
+    .first()
+    .then(result => {
+      if (result) {
+        return bcryptjs.compareSync(user.password, result.password)
+      } else {
+        return false;
+      }
+    })
 }
