@@ -42,7 +42,7 @@ Demonstrate your understanding of this week's concepts by answering the followin
 
 Sessions are a way to transfer state between client and server over the otherwise stateless protocol HTTP.
 
-- [ ] What does bcrypt do to help us store passwords in a secure manner.
+- [ ] What does bcrypt do to help us store passwords in a secure manner?
 
 We use the bcrypt library to encrypt passwords before storing them in a database
 
