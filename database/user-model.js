@@ -1,7 +1,8 @@
 module.exports = {
   insert,
   getById,
-  getByUsername
+  getByUsername,
+  validateCredentials
 }
 
 const db = require('./dbConfig')
@@ -42,4 +43,17 @@ function getByUsername(username) {
     .where('username', username)
     .select()
     .first()
+}
+
+async function validateCredentials(user) {
+  const found = await db('users')
+    .columns({
+      id:       'id',
+      username: 'username',
+      password: 'password'
+    })
+    .where({"username": user.username, "password": user.password})
+    .select()
+
+  return Boolean(found.length > 0)
 }
