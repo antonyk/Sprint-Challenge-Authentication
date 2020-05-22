@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const bcryptjs = require('bcryptjs')
 const rounds = 2;
 
-const secret = 'I am a secret!'
+const { jwtsecret } = require('../vars')
 const log = console.log
 
 router.post('/register', (req, res) => {
@@ -16,6 +16,7 @@ router.post('/register', (req, res) => {
     users.insert(user).then(result => {
       // create the jwt and return it
       const token = createToken(result)
+      res.set('authorization', token)
 
       res.status(200).json({message: "Success", jwt: token})
     })
@@ -37,6 +38,7 @@ router.post('/login', (req, res) => {
     users.authUser(user).then(result => {
       if (result) {
         const token = createToken({...user, id: result.id})
+        res.set('authorization', token)
 
         res.status(202).json({message: "Success", jwt: token})
         // set up jwt
@@ -66,5 +68,5 @@ function createToken(user) {
     expiresIn: '1d'
   }
 
-  return jwt.sign(payload, secret, options)
+  return jwt.sign(payload, jwtsecret, options)
 }
